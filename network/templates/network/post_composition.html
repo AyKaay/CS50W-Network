@@ -1,0 +1,205 @@
+<article class="px-4 py-4">
+    <div class="px-4 py-1 flex justify-between ">
+      <div class="flex flex-row justify-between ">
+        
+        <div class="mr-3" name="USERNAME">
+            <a href="{% url 'userpage' user=post.user %}">
+                <p class="hover:text-blue-500">{{post.user}}</p>
+            </a>
+        </div>
+        <div class="mx-3" name="Gap">·</div>
+
+        <div class="" name="Time">
+            <p>{{ post.post_time}}</p>
+        </div>
+      </div>
+      <!-- Else setting (three dots)-->
+      <div class="invisible " name="setting">
+        <a href="#">
+          <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-width="4" d="M6 12h.01m6 0h.01m5.99 0h.01"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Post Title -->
+    <div class="px-4 py-2 " name="Title">
+        <a href="{% url 'view_post' id=post.id %}" class="font-bold text-xl line-clamp-1 break-words hover:text-blue-500">
+            {{post.title}}
+        </a>
+    </div>
+    
+    <!-- Post Image -->
+    {% if post.image %}
+    <div class="flex px-4" name="Image">
+        <div class="flex justify-center items-center h-[360px] w-[540px] rounded-lg bg-gray-500">
+            <a href="{% url 'view_post' id=post.id %}">
+                <img src="{{post.image.url}}" class="max-h-[360px] max-w-[540px] object-contain">
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Post Body -->
+    <div class="px-4 py-2 line-clamp-3 break-words " name="Body">
+      <p>{{ post.body }}</p>
+    </div>
+    
+    <!--Like-->
+    <div class="flex gap-5 px-4 py-2">
+      <div class="flex ">
+        <div class="" name="Like">
+          <svg class="w-[27px] h-[27px] text-gray-800 hover:text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 11c.889-.086 1.416-.543 2.156-1.057a22.323 22.323 0 0 0 3.958-5.084 1.6 1.6 0 0 1 .582-.628 1.549 1.549 0 0 1 1.466-.087c.205.095.388.233.537.406a1.64 1.64 0 0 1 .384 1.279l-1.388 4.114M7 11H4v6.5A1.5 1.5 0 0 0 5.5 19v0A1.5 1.5 0 0 0 7 17.5V11Zm6.5-1h4.915c.286 0 .372.014.626.15.254.135.472.332.637.572a1.874 1.874 0 0 1 .215 1.673l-2.098 6.4C17.538 19.52 17.368 20 16.12 20c-2.303 0-4.79-.943-6.67-1.475"/>
+          </svg>
+        </div>
+        <div class="pl-1 " name="Like">{{count.likes}}</div>
+      </div>
+      
+      <div class="px-5 pt-0.5 " name="Comment">
+        <!--Shows only if 'show_comment_link' = True -->
+        {% if show_comment_link %}
+        <a href="{% url 'view_post' id=post.id %}">
+          <svg class="w-6 h-6 text-gray-800 hover:text-blue-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1" d="M16 10.5h.01m-4.01 0h.01M8 10.5h.01M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6.6a1 1 0 0 0-.69.275l-2.866 2.723A.5.5 0 0 1 8 18.635V17a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+          </svg>
+        </a>
+        {% else %}
+        <svg class="w-6 h-6 text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1" d="M16 10.5h.01m-4.01 0h.01M8 10.5h.01M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-6.6a1 1 0 0 0-.69.275l-2.866 2.723A.5.5 0 0 1 8 18.635V17a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z"/>
+          </svg>
+        {% endif %}
+      </div>
+      <!--Dislke-->
+      <div class="flex ">
+        <div class="" name="Dislike">
+          <svg class="w-[27px] h-[27px] text-gray-800 hover:text-red-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 13c-.889.086-1.416.543-2.156 1.057a22.322 22.322 0 0 0-3.958 5.084 1.6 1.6 0 0 1-.582.628 1.549 1.549 0 0 1-1.466.087 1.587 1.587 0 0 1-.537-.406 1.666 1.666 0 0 1-.384-1.279l1.389-4.114M17 13h3V6.5A1.5 1.5 0 0 0 18.5 5v0A1.5 1.5 0 0 0 17 6.5V13Zm-6.5 1H5.585c-.286 0-.372-.014-.626-.15a1.797 1.797 0 0 1-.637-.572 1.873 1.873 0 0 1-.215-1.673l2.098-6.4C6.462 4.48 6.632 4 7.88 4c2.302 0 4.79.943 6.67 1.475"/>
+          </svg>
+        </div>
+        <div class="pl-1 " name="Dislike">{{count.dislikes}}</div>
+      </div>
+      
+    </div>
+
+    <!-- Comments -->
+    <!-- Comments -->
+    <div name="post_comment" class="mx-4 py-2">
+      {% if post_comments %}
+          <ul>
+              {% for comment in post_comments %}
+                  {% if comment.post_comment.id == post.id %}    
+                  <div class=" py-1 flex justify-between ">
+                    <div class="flex flex-row justify-between ">
+                      
+                      <div class="mr-3" name="USERNAME">
+                          <a href="{% url 'userpage' user=comment.user.username  %}">
+                              <p class="font-bold hover:text-blue-500">{{comment.user.username }}</p>
+                          </a>
+                      </div>
+                      <div class="mx-3" name="Gap">·</div>
+              
+                      <div class="" name="Time">
+                          <p>{{ comment.comment_time }}</p>
+                      </div>
+                    </div>
+                    <!-- Else setting (three dots)-->
+                    <div class="invisible " name="setting">
+                      <a href="#">
+                        <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-width="4" d="M6 12h.01m6 0h.01m5.99 0h.01"/>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="">
+                    <p class="">
+                      {{ comment.comment_body }}
+                    </p>
+                  </div>
+                  {% endif %}
+              {% endfor %}
+          </ul>
+      {% else %}
+          <p>No comments yet.</p>
+      {% endif %} 
+    </div>
+</article>
+
+{% comment %}
+<div class="post">
+    <!-- User's posts-->
+    <div class="user_posts">
+        <div class="posts">
+            <!--Title-->
+            <a href="{% url 'view_post' id=post.id %}"> {{post.title}}</a>
+            <br>
+    
+            <!--Image-->
+            {% if post.image %}
+                <a href="{% url 'view_post' id=post.id %}">
+                    <img src="{{post.image.url}}" style="max-width:200px; max-height:200px;"></img>
+                </a>
+            {% endif %}
+
+            <!-- Body -->
+            <p>{{ post.body }}</p>
+            
+            <!-- Timestamp  -->
+            <p>{{ post.post_time}}</p>
+
+            <!-- React Like/dislike -->
+            <div id="like-dislike-container" data-post-id="{{ post.id }}"></div>
+            
+            <!--Follow-->
+            <div class="user_follow">
+                {% if post.user != request.user %}
+                    <a href="{% url 'userpage' user=post.user %}">
+                        <button>Follow!</button>
+                    </a>
+                {% endif %}
+            </div>
+            
+            <!-- Edit current post -->
+            {% if post.user == request.user %}
+            <div class="edit_post">
+                <button class="edit-post-button" edit-post-button="{{ post.id }}">Edit Post</button>
+                <div id="edit-post-container-{{ post.id }}" class="edit-post-container" style="display: none;"></div>
+            </div>
+            {% endif %}
+
+            <!-- Comments -->
+            <div class="post_comment">
+                {% if post_comments %}
+                    <ul>
+                        {% for comment in post_comments %}
+                            {% if comment.post_comment.id == post.id %}    
+                                <li>
+                                    <p>{{ comment.user.username }}</p>: 
+                                    <p>
+                                        {{ comment.comment_body }}
+                                        <em>({{ comment.comment_time }})</em>
+                                    </p>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No comments yet.</p>
+                {% endif %} 
+
+                <!--Shows only if 'show_comment_link' = True -->
+                {% if show_comment_link %}
+                    <div class="add_comment">
+                        <a href="{% url 'view_post' id=post.id %}">
+                            <button>Add Comment</button>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+{% endcomment %}

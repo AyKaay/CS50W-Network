@@ -1,0 +1,71 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="">
+        <div class="px-8 py-4 flex flex-row ">
+            <div class="flex mt-5 max-h-20 max-w-20 rounded-lg">
+                <img src="https://static.vecteezy.com/system/resources/previews/021/548/095/original/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg" class="">
+            </div>
+
+            <div class="px-8 py-4 flex flex-col "> 
+                <p name="username" class="text-2xl font-extrabold">{{user_info.username}}</p>
+                <p name="email" class="pb-2-2 my-1 text-based text-gray-700">{{user_info.email}}</p>
+                
+                <!-- User Follow -->
+                {% if current_user != user_info %}
+                    {% if is_following %}
+                        <form action="{% url 'unfollow_user' user_info.username %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="my-1 text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-1.5 text-center inline-flex items-center me-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-400">
+                                <svg class="mr-1 w-6 h-6text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M5 8a4 4 0 1 1 8 0 4 4 0 0 1-8 0Zm-2 9a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1Zm13-6a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-4Z" clip-rule="evenodd"/>
+                                </svg>                                  
+                                Unfollow
+                            </button>                                  
+                        </form>
+                    {% else %}
+                        <form action="{% url 'follow_user' user_info.username %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="my-1 text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-1.5 text-center inline-flex items-center me-2 bg-blue-600 hover:bg-blue-700 focus:ring-blue-400">
+                                <svg class="w-6 h-6 text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                                  </svg>                            
+                                Follow
+                            </button> 
+                        </form>
+                    {% endif %}
+                {% endif %}
+            
+                <!-- Follower count -->
+                {% if user_follower_count < 1 %}
+                    <p>Follower: 0</p>
+                {% else %}
+                    <p>Followers: {{ user_follower_count }}</p>
+                {% endif %}
+            </div>
+
+
+        </div>
+        
+        <div name="line-break" class="mx-8 my-4 border border-gray-400 border-opacity-80"></div>
+
+        <!-- Create Post -->
+        {% if current_user == user_info %}
+        <a class="px-8 py-4 mt-4" href="{% url 'create_post' %}">
+            <button type="button" class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2">
+                <svg class="w-6 h-6 text-gray-50 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                </svg>                          
+                Create Post
+            </button>
+        </a>
+        {% endif %}
+
+        <!-- User's past posts-->
+        <div class="user_posts">
+            {% for post in user_posts %}
+                {% include "network/post_composition.html" with post=post post_comments=post_comments show_comment_link=True %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

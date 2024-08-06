@@ -1,0 +1,231 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Social Network{% endblock %}</title>
+        
+        {% comment %}
+        <script src="frontend/node_modules/flowbite/dist/flowbite.min.js"></script>
+        <link href="{% static 'network/output.css' %}" rel="stylesheet">
+        {% endcomment %}
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
+        
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <!-- CSRF Token -->
+        <form id="csrf-form">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        </form>
+        
+        <!--Navbar-->
+        <nav class="fixed top-0 z-50 w-full bg-white border-b-4 border-gray-200 ">
+            <div class="pt-3 px-3 py-3 lg:px-5 lg:pl-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Title logo -->
+                    <a href="{% url 'index' %}" class="flex ms-2 md:me-24">
+                        <img src="https://stellaris.paradoxwikis.com/images/4/43/Auth_hive_mind.png" class="h-8 me-3" alt="FlowBite Logo" />
+                        <span class="self-center text-xl sm:text-2xl whitespace-nowrap font-black">Hivemind</span>
+                    </a>
+                    </div>
+
+                    <!-- Profile photo dropdown -->
+                    <div class="flex items-center">
+                        <div class="flex items-center ms-3">
+                        <!--Profile Photo-->
+                        <div>
+                            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                            <span class="sr-only">Open user menu</span>
+                            <img class="w-8 h-8 rounded-full" src="https://static.vecteezy.com/system/resources/previews/021/548/095/original/default-profile-picture-avatar-user-avatar-icon-person-icon-head-icon-profile-picture-icons-default-anonymous-user-male-and-female-businessman-photo-placeholder-social-network-avatar-portrait-free-vector.jpg" alt="user photo">
+                            </button>
+                        </div>
+
+                        <!-- Profile photo dropdown list -->
+                        <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                            {% if user.is_authenticated %}
+                                <p class=" font-medium text-sm text-gray-900" role="none">
+                                    {{ user.username }}
+                                </p>
+                                <p class="text-sm text-gray-900 truncate" role="none">
+                                    {{ user.email }}
+                                </p>
+                            {% else %}
+                                <p class="text-sm text-gray-900" role="none">
+                                    Not logged in
+                                </p>
+                            {% endif %}
+                            <hr class="h-px mt-4 bg-gray-900 border-1">
+                            </div>
+                            
+                            <ul class="py-1" role="none">
+                            {% if user.is_authenticated %}
+                            <li class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
+                                <a href="{% url 'userpage' request.user %}">Dashboard</a>
+                            </li>
+                            <li class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
+                                <a href="{% url 'followed' %}">Followed User</a>
+                            </li>
+                            <li class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
+                                <a href="{% url 'logout' %}">Sign out</a>
+                            </li>
+                            {% else %}
+                            <li class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
+                                <a href="{% url 'register' %}">Register</a>
+                            </li>
+                            <li class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400">
+                                <a href="{% url 'login' %}">Login</a>
+                            </li>
+                            {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Sidebar -->
+        <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r-4 border-gray-300 sm:translate-x-0" aria-label="Sidebar">
+            <div class="h-full px-3 pb-4 overflow-y-auto bg-white ">
+                <ul class="space-y-2 font-medium">
+                <!--Sidebar list-->
+                <li>
+                    <a href="{% url 'index' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                        <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"/>
+                          </svg>
+                          
+                        <span class="ms-3">Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                        <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M18.122 17.645a7.185 7.185 0 0 1-2.656 2.495 7.06 7.06 0 0 1-3.52.853 6.617 6.617 0 0 1-3.306-.718 6.73 6.73 0 0 1-2.54-2.266c-2.672-4.57.287-8.846.887-9.668A4.448 4.448 0 0 0 8.07 6.31 4.49 4.49 0 0 0 7.997 4c1.284.965 6.43 3.258 5.525 10.631 1.496-1.136 2.7-3.046 2.846-6.216 1.43 1.061 3.985 5.462 1.754 9.23Z"/>
+                          </svg>                          
+                        <span class="ms-3">Popular</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                        <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M4 4.5V19a1 1 0 0 0 1 1h15M7 14l4-4 4 4 5-5m0 0h-3.207M20 9v3.207"/>
+                          </svg>                                                    
+                        <span class="ms-3">Trending</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                        <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 5.464V3.099m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175C19 17.4 19 18 18.462 18H5.538C5 18 5 17.4 5 16.807c0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 12 5.464ZM6 5 5 4M4 9H3m15-4 1-1m1 5h1M8.54 18a3.48 3.48 0 0 0 6.92 0H8.54Z"/>
+                          </svg>
+                          
+                        <span class="ms-3">Recommended</span>
+                    </a>
+                </li>
+                </ul>
+                <!--horizontal line border-->
+                <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-300 ">
+                    <li>
+                        <a href="{% url 'create_post' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                              </svg>
+                              
+                            <span class="ms-3">Create post</span>
+                        </a>
+                    </li>
+                    </ul>
+                    <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-300 ">
+                    <li>
+                        <a href="{% url 'userpage' request.user %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="1.2" d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                              </svg>                              
+                            <span class="ms-3">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'followed' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-width="1.2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                              </svg>                              
+                            <span class="ms-3">Followed</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M7 11c.889-.086 1.416-.543 2.156-1.057a22.323 22.323 0 0 0 3.958-5.084 1.6 1.6 0 0 1 .582-.628 1.549 1.549 0 0 1 1.466-.087c.205.095.388.233.537.406a1.64 1.64 0 0 1 .384 1.279l-1.388 4.114M7 11H4v6.5A1.5 1.5 0 0 0 5.5 19v0A1.5 1.5 0 0 0 7 17.5V11Zm6.5-1h4.915c.286 0 .372.014.626.15.254.135.472.332.637.572a1.874 1.874 0 0 1 .215 1.673l-2.098 6.4C17.538 19.52 17.368 20 16.12 20c-2.303 0-4.79-.943-6.67-1.475"/>
+                              </svg>                              
+                            <span class="ms-3">Liked Post</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-gray-300 ">
+                {% if user.is_authenticated %}
+                    <li>
+                        <a href="https://github.com/me50/AyKaay/blob/web50/projects/2020/x/network/README.MD" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                              </svg>                              
+                            <span class="ms-3">About</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-width="1.2" d="m6 6 12 12m3-6a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                              </svg>                              
+                            <span class="ms-3">Sign Out</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'register' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16 12h4m-2 2v-4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                              </svg>
+                              
+                            <span class="ms-3">Register</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'login' %}" class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-300  group">
+                            <svg class="w-6 h-6 text-gray-800 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="1.2" d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                              </svg>
+                              
+                            <span class="ms-3">Sign in</span>
+                        </a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="p-4 sm:ml-64">
+            <div class="p-4 px-16 border-2 border-gray-200 border-dashed rounded-lg mt-14">
+                {% block body %}
+                {% endblock %}
+            </div>
+        </main>
+  
+        <script type="module" src="{% static 'assets/main-Ba8Hjl7h.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script> 
+    </body>
+</html>

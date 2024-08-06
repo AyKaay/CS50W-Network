@@ -1,0 +1,9 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<h3>Posts from users you followed</h3>
+    {% for post in followed_posts %}
+        <!-- TODO FIX: comments from individual post of followed user does not show -->
+        {% include "network/post_composition.html" with post=post post_comments=post_comments show_comment_link=True %}
+    {% endfor %}
+{% endblock %}

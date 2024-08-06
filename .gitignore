@@ -1,0 +1,15 @@
+network/__pycache__
+network/migrations/__pycache__
+project4/__pycache__
+media
+.vscode
+network/__pycache__/__init__.cpython-312.pyc
+network/__pycache__/admin.cpython-312.pyc
+network/__pycache__/apps.cpython-312.pyc
+network/__pycache__/models.cpython-312.pyc
+network/__pycache__/urls.cpython-312.pyc
+network/__pycache__/views.cpython-312.pyc
+network/migrations/__pycache__/__init__.cpython-312.pyc
+project4/__pycache__/__init__.cpython-312.pyc
+project4/__pycache__/settings.cpython-312.pyc
+project4/__pycache__/urls.cpython-312.pyc

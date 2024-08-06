@@ -1,0 +1,15 @@
+<!-- view_post.html -->
+{% extends "network/layout.html" %}
+
+{% block body %}
+    {% include "network/post_composition.html" with post=user_posts post_comments=post_comments show_comment_link=False %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mx-8">
+            <label for="comment_form" class="block mb-2 text-sm font-medium text-gray-900">Comment: </label>
+            <textarea id="comment_form" name="comment_form" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write a comment here..."></textarea>
+        </div>
+        <button type="submit" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center mx-8 my-2 me-2 mb-2">Add comment</button>
+    </form>
+{% endblock %}
